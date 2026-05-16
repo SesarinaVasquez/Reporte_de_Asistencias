@@ -16,3 +16,6 @@ def datos():
     aprobador = input("Ingrese aprobador: ")
     
 datos()
+
+def registrar_fecha_inicio()
+    fechalunes = "04/05/2026"
