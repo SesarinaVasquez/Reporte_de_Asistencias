@@ -100,6 +100,16 @@ for i in range(6):
     print()
 
 # ============================================================
+# PASO 5: Calcular total horas semanales
+# Responsable: Brian
+# ============================================================
+
+total_horas = 0
+for i in range(6):
+    total_horas = total_horas + lista_horas[i]
+
+
+# ============================================================
 # PASO 6: Calcular horas extras
 # Responsable: Omar
 # ============================================================
