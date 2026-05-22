@@ -128,6 +128,16 @@ for i in range(6):
     if lista_trabajo[i] == "Si":
         dias_trabajados = dias_trabajados + 1
 
+# PASO 8: Determinar tipo de jornada
+# Responsable: Brian
+# ============================================================
+
+if dias_trabajados >= 6:
+    tipo_jornada = "Completa"
+else:
+    tipo_jornada = "Incompleta"
+
+
 # ============================================================
 # PASO 9: Generar tabla de asistencia (consolidado en pantalla)
 # Responsable: Omar
