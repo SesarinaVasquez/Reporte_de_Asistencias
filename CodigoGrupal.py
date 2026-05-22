@@ -127,7 +127,8 @@ dias_trabajados = 0
 for i in range(6):
     if lista_trabajo[i] == "Si":
         dias_trabajados = dias_trabajados + 1
-
+        
+# ============================================================
 # PASO 8: Determinar tipo de jornada
 # Responsable: Brian
 # ============================================================
