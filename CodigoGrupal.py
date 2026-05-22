@@ -26,3 +26,30 @@ turno     = input("Turno             : ")
 aprobador = input("Aprobador         : ")
 
 print()
+
+Brian
+
+# ============================================================
+# PASO 3: Validar dias trabajados
+# Responsable: Omar
+# ============================================================
+
+print("-" * 50)
+print("  REGISTRO DIARIO")
+print("-" * 50)
+print()
+
+lista_dia     = []
+lista_fecha   = []
+lista_trabajo = []
+lista_inicio  = []
+lista_fin     = []
+lista_horas   = []
+
+for i in range(6):
+    nombre_dia = NOMBRES_DIAS[i]
+    fecha_dia  = fechas[i].strftime("%d/%m/%Y")
+
+    print("Dia: " + nombre_dia + " " + fecha_dia)
+    respuesta = input("  Trabajaste? (s/n): ")
+
