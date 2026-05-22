@@ -65,6 +65,39 @@ for i in range(6):
     print("Dia: " + nombre_dia + " " + fecha_dia)
     respuesta = input("  Trabajaste? (s/n): ")
 
+# ============================================================
+    # PASO 4: Calcular horas trabajadas por dia
+    # Responsable: Sesarina
+    # ============================================================
+
+    if respuesta == "s":
+        inicio = input("  Hora de inicio (HH:MM): ")
+        fin    = input("  Hora de fin    (HH:MM): ")
+
+        hora_i = datetime.strptime(inicio, "%H:%M")
+        hora_f = datetime.strptime(fin,    "%H:%M")
+        diferencia = hora_f - hora_i
+
+        if diferencia.total_seconds() < 0:
+            diferencia = diferencia + timedelta(days=1)
+
+        horas_trabajadas = diferencia.total_seconds() / 3600
+
+        lista_dia.append(nombre_dia)
+        lista_fecha.append(fecha_dia)
+        lista_trabajo.append("Si")
+        lista_inicio.append(inicio)
+        lista_fin.append(fin)
+        lista_horas.append(round(horas_trabajadas, 2))
+    else:
+        lista_dia.append(nombre_dia)
+        lista_fecha.append(fecha_dia)
+        lista_trabajo.append("No")
+        lista_inicio.append("--")
+        lista_fin.append("--")
+        lista_horas.append(0)
+
+    print()
 
 # ============================================================
 # PASO 6: Calcular horas extras
