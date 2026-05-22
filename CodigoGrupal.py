@@ -66,9 +66,9 @@ for i in range(6):
     respuesta = input("  Trabajaste? (s/n): ")
 
 # ============================================================
-    # PASO 4: Calcular horas trabajadas por dia
-    # Responsable: Sesarina
-    # ============================================================
+# PASO 4: Calcular horas trabajadas por dia
+# Responsable: Sesarina
+# ============================================================
 
     if respuesta == "s":
         inicio = input("  Hora de inicio (HH:MM): ")
@@ -78,8 +78,8 @@ for i in range(6):
         hora_f = datetime.strptime(fin,    "%H:%M")
         diferencia = hora_f - hora_i
 
-        if diferencia.total_seconds() < 0:
-            diferencia = diferencia + timedelta(days=1)
+    if diferencia.total_seconds() < 0:
+       diferencia = diferencia + timedelta(days=1)
 
         horas_trabajadas = diferencia.total_seconds() / 3600
 
@@ -108,6 +108,15 @@ horas_extras = total_horas - 48
 if horas_extras < 0:
     horas_extras = 0
 
+# ============================================================
+# PASO 7: Contar dias trabajados
+# Responsable: Sesarina
+# ============================================================
+
+dias_trabajados = 0
+for i in range(6):
+    if lista_trabajo[i] == "Si":
+        dias_trabajados = dias_trabajados + 1
 
 # ============================================================
 # PASO 9: Generar tabla de asistencia (consolidado en pantalla)
