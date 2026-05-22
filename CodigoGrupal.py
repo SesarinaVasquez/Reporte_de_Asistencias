@@ -178,4 +178,188 @@ print("Horas extras     :", fmt_horas(horas_extras))
 print("Tipo de jornada  :", tipo_jornada)
 print("=" * 60)
 
+# ============================================================
+# PASO 10: Exportar reporte Excel
+# Responsable: Omar, Brian y Sesarina
+# ============================================================
+
+# --- Colores del diseño ---
+AZUL_OSC  = "1F4E79"
+AZUL_CLAR = "D6E4F0"
+GRIS      = "2C3E50"
+VERDE     = "1E8449"
+ROJO      = "C0392B"
+AMARILLO  = "FFF2CC"
+BLANCO    = "FFFFFF"
+NEGRO     = "000000"
+BLANCO_F  = "FFFFFF"
+
+def estilo(celda, negrita=False, fondo=None, color_fuente=NEGRO,
+           alinear="left", size=11):
+    celda.font      = Font(bold=negrita, color=color_fuente,
+                           size=size, name="Arial")
+    celda.alignment = Alignment(horizontal=alinear, vertical="center",
+                                wrap_text=True)
+    if fondo:
+        celda.fill = PatternFill("solid", start_color=fondo)
+    lado = Side(style="thin")
+    celda.border = Border(left=lado, right=lado, top=lado, bottom=lado)
+
+def combinar(ws, f1, c1, f2, c2, valor, negrita=False, fondo=None,
+             color_fuente=BLANCO_F, alinear="center", size=11):
+    ws.merge_cells(start_row=f1, start_column=c1,
+                   end_row=f2,   end_column=c2)
+    c = ws.cell(row=f1, column=c1, value=valor)
+    estilo(c, negrita=negrita, fondo=fondo,
+           color_fuente=color_fuente, alinear=alinear, size=size)
+
+libro = Workbook()
+hoja  = libro.active
+hoja.title = "Asistencia Semanal"
+
+hoja.column_dimensions["A"].width = 3
+hoja.column_dimensions["B"].width = 14
+hoja.column_dimensions["C"].width = 13
+hoja.column_dimensions["D"].width = 12
+hoja.column_dimensions["E"].width = 9
+hoja.column_dimensions["F"].width = 9
+hoja.column_dimensions["G"].width = 10
+hoja.column_dimensions["H"].width = 12
+hoja.column_dimensions["I"].width = 12.3
+
+hoja.row_dimensions[1].height = 40
+combinar(hoja, 1,2, 1,8, "TABLA DE ASISTENCIA SEMANAL",
+         negrita=True, fondo=AZUL_OSC, size=16)
+
+hoja.row_dimensions[2].height = 18
+fecha_gen = datetime.now().strftime("%d/%m/%Y %H:%M")
+combinar(hoja, 2,2, 2,8, "Generado: " + fecha_gen,
+         fondo=GRIS, size=9, alinear="right")
+
+combinar(hoja, 4,2, 4,8, "DATOS DEL COLABORADOR",
+         negrita=True, fondo=GRIS, size=11)
+
+datos_usuario = [
+    ("Codigo",    codigo),
+    ("Nombre",    nombre),
+    ("Area",      area),
+    ("Turno",     turno),
+    ("Aprobador", aprobador),
+]
+for idx, (etiqueta, valor) in enumerate(datos_usuario):
+    fila = 5 + idx
+    hoja.row_dimensions[fila].height = 20
+    c_etiq = hoja.cell(row=fila, column=2, value=etiqueta)
+    estilo(c_etiq, negrita=True, fondo=AZUL_CLAR,
+           color_fuente=NEGRO, alinear="right")
+    combinar(hoja, fila,3, fila,8, valor,
+             fondo=BLANCO, color_fuente=NEGRO, alinear="left")
+
+combinar(hoja, 11,2, 11,8, "REGISTRO DIARIO",
+         negrita=True, fondo=GRIS, size=11)
+
+hoja.row_dimensions[12].height = 25
+cabeceras = ["N°", "Dia", "Fecha", "Trabajo?",
+             "H. Inicio", "H. Fin", "Horas", "Observacion"]
+for col, cab in enumerate(cabeceras, 2):
+    c = hoja.cell(row=12, column=col, value=cab)
+    estilo(c, negrita=True, fondo=AZUL_OSC,
+           color_fuente=BLANCO_F, alinear="center", size=10)
+
+for i in range(6):
+    fila = 13 + i
+    hoja.row_dimensions[fila].height = 20
+
+    if i % 2 == 0:
+        fondo_fila = AZUL_CLAR
+    else:
+        fondo_fila = BLANCO
+
+    if lista_trabajo[i] == "Si":
+        color_trabajo = VERDE
+        texto_trabajo = "Si"
+        observacion   = ""
+    else:
+        color_trabajo = ROJO
+        texto_trabajo = "No"
+        observacion   = "Ausente"
+
+    hoja_horas = fmt_horas(lista_horas[i])
+
+    datos_fila = [
+        (2, i + 1,              NEGRO,         "center", False),
+        (3, lista_dia[i],       NEGRO,         "left",   False),
+        (4, lista_fecha[i],     NEGRO,         "center", False),
+        (5, texto_trabajo,      color_trabajo, "center", True ),
+        (6, lista_inicio[i],    NEGRO,         "center", False),
+        (7, lista_fin[i],       NEGRO,         "center", False),
+        (8, hoja_horas,         NEGRO,         "center", False),
+        (9, observacion,        NEGRO,         "center", False),
+    ]
+
+    for col, valor, color_f, alin, negr in datos_fila:
+        c = hoja.cell(row=fila, column=col, value=valor)
+        estilo(c, negrita=negr, fondo=fondo_fila,
+               color_fuente=color_f, alinear=alin)
+
+combinar(hoja, 21,2, 21,8, "RESUMEN DE HORAS",
+         negrita=True, fondo=GRIS, size=11)
+
+hoja.row_dimensions[22].height = 22
+hoja.row_dimensions[23].height = 22
+hoja.row_dimensions[24].height = 22
+
+resumen_datos = [
+    (22, "Dias trabajados",        str(dias_trabajados) + " de 6", AZUL_CLAR),
+    (23, "Total horas semanales",  fmt_horas(total_horas),         AZUL_CLAR),
+    (24, "Horas extras (48h)",     fmt_horas(horas_extras),        AMARILLO),
+]
+
+for fila, etiqueta, valor, fondo_res in resumen_datos:
+    combinar(hoja, fila,2, fila,5, etiqueta,
+             negrita=True, fondo=fondo_res,
+             color_fuente=NEGRO, alinear="left")
+    combinar(hoja, fila,6, fila,8, valor,
+             negrita=True, fondo=fondo_res,
+             color_fuente=NEGRO, alinear="center")
+
+combinar(hoja, 26,2, 26,8, "TIPO DE JORNADA",
+         negrita=True, fondo=GRIS, size=11)
+
+hoja.row_dimensions[27].height = 30
+if tipo_jornada == "Completa":
+    color_jornada = VERDE
+    desc_jornada  = "El colaborador cumplio 6 o mas dias trabajados en la semana."
+else:
+    color_jornada = ROJO
+    desc_jornada  = "El colaborador trabajo menos de 6 dias en la semana."
+
+combinar(hoja, 27,2, 27,8, "JORNADA " + tipo_jornada.upper(),
+         negrita=True, fondo=color_jornada, size=14)
+
+hoja.row_dimensions[28].height = 18
+combinar(hoja, 28,2, 28,8, desc_jornada,
+         fondo=AZUL_CLAR, color_fuente=NEGRO,
+         alinear="center", size=9)
+
+combinar(hoja, 30,2, 30,4, "Firma del colaborador",
+         fondo=BLANCO, color_fuente=NEGRO, alinear="center", size=9)
+combinar(hoja, 30,6, 30,8, "Firma del aprobador",
+         fondo=BLANCO, color_fuente=NEGRO, alinear="center", size=9)
+
+combinar(hoja, 33,2, 33,4, "_________",
+         fondo=BLANCO, color_fuente=NEGRO, alinear="center")
+combinar(hoja, 33,6, 33,8, "_________",
+         fondo=BLANCO, color_fuente=NEGRO, alinear="center")
+
+nombre_archivo = "asistencia_" + codigo + "_" + lista_fecha[0].replace("/", "-") + ".xlsx"
+libro.save(nombre_archivo)
+
+print()
+print("=" * 60)
+print("  Archivo Excel generado exitosamente!")
+print("  Nombre:", nombre_archivo)
+print("  Se guardo en la misma carpeta donde esta este script.")
+print("=" * 60)
+
 
