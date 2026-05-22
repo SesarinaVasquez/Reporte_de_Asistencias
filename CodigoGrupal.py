@@ -65,3 +65,55 @@ for i in range(6):
     print("Dia: " + nombre_dia + " " + fecha_dia)
     respuesta = input("  Trabajaste? (s/n): ")
 
+
+# ============================================================
+# PASO 6: Calcular horas extras
+# Responsable: Omar
+# ============================================================
+
+horas_extras = total_horas - 48
+if horas_extras < 0:
+    horas_extras = 0
+
+
+# ============================================================
+# PASO 9: Generar tabla de asistencia (consolidado en pantalla)
+# Responsable: Omar
+# ============================================================
+
+def fmt_horas(h):
+    hh = int(h)
+    mm = int(round((h - hh) * 60))
+    return str(hh) + "h " + str(mm).zfill(2) + "m"
+
+print()
+print("=" * 60)
+print("            CONSOLIDADO SEMANAL")
+print("=" * 60)
+print("Codigo    :", codigo)
+print("Nombre    :", nombre)
+print("Area      :", area)
+print("Turno     :", turno)
+print("Aprobador :", aprobador)
+print("-" * 60)
+print("{:<12} {:<13} {:<8} {:<8} {:<8}".format("Dia", "Fecha", "Inicio", "Fin", "Horas"))
+print("-" * 60)
+
+for i in range(6):
+    if lista_trabajo[i] == "Si":
+        print("{:<12} {:<13} {:<8} {:<8} {:<8}".format(
+            lista_dia[i], lista_fecha[i],
+            lista_inicio[i], lista_fin[i],
+            fmt_horas(lista_horas[i])))
+    else:
+        print("{:<12} {:<13} {}".format(
+            lista_dia[i], lista_fecha[i], "No trabajo"))
+
+print("=" * 60)
+print("Dias trabajados  :", dias_trabajados, "de 6")
+print("Total horas      :", fmt_horas(total_horas))
+print("Horas extras     :", fmt_horas(horas_extras))
+print("Tipo de jornada  :", tipo_jornada)
+print("=" * 60)
+
+
