@@ -27,7 +27,19 @@ aprobador = input("Aprobador         : ")
 
 print()
 
-Brian
+# ============================================================
+# PASO 2: Registrar fecha de inicio de semana
+# Responsable: Brian
+# ============================================================
+
+fecha_lunes = input("Fecha del LUNES de la semana (DD/MM/AAAA): ")
+lunes = datetime.strptime(fecha_lunes, "%d/%m/%Y")
+
+fechas = []
+for i in range(6):
+    fechas.append(lunes + timedelta(days=i))
+
+print()
 
 # ============================================================
 # PASO 3: Validar dias trabajados
